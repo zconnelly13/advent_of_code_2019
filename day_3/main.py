@@ -1,4 +1,4 @@
-from collections import defaultdict
+# from collections import defaultdict
 
 
 with open('input.txt') as fp:
@@ -20,10 +20,11 @@ lines = [
 ]
 """
 
-spots_hit = defaultdict(int)
+spots_hit = {}
 
 x = 0
 y = 0
+steps = 0
 for move in lines[0]:
     # parse input
     direction = move[0]
@@ -45,10 +46,12 @@ for move in lines[0]:
 
     # apply them to the map
     for point in points:
-        spots_hit[point] = 1
+        steps += 1
+        spots_hit[point] = (steps, 0)
 
 x = 0
 y = 0
+steps = 0
 for move in lines[1]:
     # parse input
     direction = move[0]
@@ -70,9 +73,13 @@ for move in lines[1]:
 
     # apply them to the map
     for point in points:
-        if spots_hit[point] == 1:
-            spots_hit[point] = 2
+        steps += 1
+        if spots_hit.get(point) is not None:
+            spots_hit[point] = (spots_hit[point][0], steps)
 
 
 # Part I
-print(min([abs(k[0]) + abs(k[1]) for k, v in spots_hit.items() if v >= 2]))
+# print(min([abs(k[0]) + abs(k[1]) for k, v in spots_hit.items() if v >= 2]))
+
+# Part II
+print(min([sum(v) for v in spots_hit.values() if v[1] != 0]))
